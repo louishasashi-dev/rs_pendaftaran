@@ -1,0 +1,23 @@
+## ============================================================
+## File: .htaccess  (letakkan di ROOT folder rs_pendaftaran/)
+## ============================================================
+## Aktifkan mod_rewrite agar URL bersih tanpa index.php
+## Pastikan di httpd.conf: AllowOverride All
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /rs_pendaftaran/
+
+    # Jangan rewrite file/folder yang ada fisiknya
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Semua request lain → ke index.php
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+# Opsi keamanan
+<FilesMatch "\.(env|gitignore|log|sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
