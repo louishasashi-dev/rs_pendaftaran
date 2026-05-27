@@ -63,7 +63,7 @@
                             </div>
                             <div class="text-center mt-2">
                                 <small class="text-muted">
-                                    Demo Admin: <code>admin</code> / <code>admin123</code>
+                                    Louis Hasashi Halim - 1224160052
                                 </small>
                             </div>
                         </div>

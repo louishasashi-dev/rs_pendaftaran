@@ -1,38 +1,21 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| application/controllers/Admin.php
-|--------------------------------------------------------------------------
-*/
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+class Admin extends Admin_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->_cek_login();
         $this->load->model(array('User_model', 'Pasien_model', 'Pendaftaran_model', 'Dokter_model'));
     }
 
-    // Middleware: hanya admin yang boleh akses
-    private function _cek_login() {
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('role') != 'admin') {
-            $this->session->set_flashdata('error', 'Anda harus login sebagai admin!');
-            redirect('auth');
-        }
-    }
-
-    // ==========================================================
-    // DASHBOARD
-    // ==========================================================
     public function dashboard() {
         $data = array(
-            'title'            => 'Dashboard Admin',
-            'total_pasien'     => $this->Pasien_model->count_all(),
-            'total_pendaftaran'=> $this->Pendaftaran_model->count_all(),
-            'total_disetujui'  => $this->Pendaftaran_model->count_by_status('disetujui'),
-            'total_ditolak'    => $this->Pendaftaran_model->count_by_status('ditolak'),
-            'total_pending'    => $this->Pendaftaran_model->count_by_status('pending'),
+            'title'               => 'Dashboard Admin',
+            'total_pasien'        => $this->Pasien_model->count_all(),
+            'total_pendaftaran'   => $this->Pendaftaran_model->count_all(),
+            'total_disetujui'     => $this->Pendaftaran_model->count_by_status('disetujui'),
+            'total_ditolak'       => $this->Pendaftaran_model->count_by_status('ditolak'),
+            'total_pending'       => $this->Pendaftaran_model->count_by_status('pending'),
             'pendaftaran_terbaru' => $this->Pendaftaran_model->get_terbaru(5),
         );
         $this->load->view('template/header', $data);
@@ -40,9 +23,6 @@ class Admin extends CI_Controller {
         $this->load->view('template/footer');
     }
 
-    // ==========================================================
-    // MANAJEMEN PENDAFTARAN
-    // ==========================================================
     public function pendaftaran() {
         $data = array(
             'title'       => 'Manajemen Pendaftaran',
@@ -67,9 +47,6 @@ class Admin extends CI_Controller {
         redirect('admin/pendaftaran');
     }
 
-    // ==========================================================
-    // MANAJEMEN PASIEN (CRUD)
-    // ==========================================================
     public function pasien() {
         $data = array(
             'title'  => 'Manajemen Data Pasien',
@@ -114,11 +91,10 @@ class Admin extends CI_Controller {
 
     public function edit_pasien($id) {
         $data = array(
-            'title' => 'Edit Pasien',
+            'title'  => 'Edit Pasien',
             'pasien' => $this->Pasien_model->get_by_id($id),
         );
         if (!$data['pasien']) show_404();
-
         $this->load->view('template/header', $data);
         $this->load->view('admin/form_pasien', $data);
         $this->load->view('template/footer');
@@ -155,14 +131,11 @@ class Admin extends CI_Controller {
         redirect('admin/pasien');
     }
 
-    // ==========================================================
-    // JADWAL PENDAFTARAN
-    // ==========================================================
     public function jadwal() {
         $data = array(
-            'title'   => 'Jadwal Pendaftaran Pasien',
-            'jadwal'  => $this->Pendaftaran_model->get_jadwal(),
-            'dokter'  => $this->Dokter_model->get_all(),
+            'title'  => 'Jadwal Pendaftaran Pasien',
+            'jadwal' => $this->Pendaftaran_model->get_jadwal(),
+            'dokter' => $this->Dokter_model->get_all(),
         );
         $this->load->view('template/header', $data);
         $this->load->view('admin/jadwal', $data);
